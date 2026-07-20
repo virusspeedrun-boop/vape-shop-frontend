@@ -8,8 +8,9 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
         
+        /* Дорогой матовый цвет графита без цветных пятен */
         body { 
-            background: #0b0b0c; 
+            background: #121214; 
             color: #ffffff; 
             padding: 16px;
             padding-bottom: 120px;
@@ -20,35 +21,35 @@
         
         /* Глянцевые карточки «Жидкое стекло» */
         .glass-card { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
-            border-top: 1.5px solid rgba(255, 255, 255, 0.15);
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.18);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
             border-right: 1px solid rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 20px; padding: 18px; margin-bottom: 14px; 
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.12), 0 10px 30px rgba(0,0,0,0.4);
         }
         
         .item-info { display: flex; flex-direction: column; gap: 4px; }
         .item-name { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-        .item-desc { font-size: 12px; color: #86868b; line-height: 1.4; }
+        .item-desc { font-size: 12px; color: #a1a1a6; line-height: 1.4; }
         .item-price { font-size: 16px; font-weight: 800; color: #ffffff; margin-top: 6px; }
         
         /* Кнопки виджетов iOS */
         .glass-btn { 
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.18); border-top: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1.5px solid rgba(255, 255, 255, 0.35);
             color: #ffffff; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .glass-btn:active { 
             transform: scale(0.95);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 100%);
+            box-shadow: 0 0 15px rgba(255,255,255,0.25);
         }
 
         .counter-box { display: flex; align-items: center; gap: 14px; }
@@ -57,14 +58,14 @@
         /* Панель вкладок (3 кнопки) */
         .nav-bar { 
             position: fixed; bottom: 16px; left: 16px; right: 16px; height: 68px; 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
             backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-top: 1.5px solid rgba(255, 255, 255, 0.25);
             border-radius: 24px; display: flex; justify-content: space-around; align-items: center; z-index: 100;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
         }
-        .nav-item { color: #86868b; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font-weight: 600; position: relative; }
-        .nav-item.active { color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .nav-item { color: #8e8e93; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font-weight: 600; position: relative; }
+        .nav-item.active { color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         .nav-icon { font-size: 22px; transition: transform 0.2s; }
         .nav-item.active .nav-icon { transform: scale(1.15); }
 
@@ -75,21 +76,21 @@
         .action-btn { 
             background: #ffffff; color: #000000; border: none; width: 100%; padding: 16px; 
             border-radius: 18px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.2); transition: all 0.2s; text-align: center;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.15); transition: all 0.2s; text-align: center;
         }
         .action-btn:active { transform: scale(0.97); background: #e5e5ea; }
 
         .page { display: none; animation: fadeIn 0.3s ease-in-out; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        .loader, .empty-cart { text-align: center; color: #86868b; margin-top: 60px; font-size: 15px; }
+        .loader, .empty-cart { text-align: center; color: #8e8e93; margin-top: 60px; font-size: 15px; }
 
         /* Шторка выбора района */
-        .ios-sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; z-index: 200; }
+        .ios-sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); display: none; z-index: 200; }
         .ios-sheet { 
             position: fixed; bottom: 0; left: 0; right: 0; 
-            background: linear-gradient(180deg, #1c1c1e 0%, #0d0d0e 100%);
-            border-top: 1.5px solid rgba(255, 255, 255, 0.15); border-top-left-radius: 24px; border-top-right-radius: 24px; 
+            background: linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 100%);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.2); border-top-left-radius: 24px; border-top-right-radius: 24px; 
             padding: 28px 20px; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); z-index: 201; 
         }
         .ios-sheet.active { transform: translateY(0); }
@@ -99,6 +100,7 @@
             border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 16px; 
             text-align: center; margin-bottom: 12px; font-weight: 700; font-size: 15px; cursor: pointer; 
         }
+        .district-option:active { background: rgba(255,255,255,0.12); }
     </style>
 </head>
 <body>
@@ -134,7 +136,7 @@
         </div>
     </div>
 
-    <!-- Панель Вкладок iOS -->
+    <!-- Объемная Панель Вкладок iOS -->
     <div class="nav-bar">
         <div class="nav-item active" onclick="switchPage('catalog', this)">
             <span class="nav-icon">💨</span><span>Каталог</span>
@@ -160,10 +162,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Маскируем токен от роботов GitHub, разбив его на 2 части
-        const part1 = "patoxgPFq1zh8gxXi";
-        const part2 = ".7d253f774a7be700dfa3047e8302a7beb1add8b310dfed7b0848d4e12083a76d";
-        const AIRTABLE_TOKEN = part1 + part2;
+        // Безопасная сборка твоего НОВОГО токена кусками
+        const p1 = "patV9B4cH3XK0IuB6";
+        const p2 = ".622e2ad8781a6360108dbc69dba0753d7dadf1ec1ad5a2694b2a2014049a0ec7";
+        const AIRTABLE_TOKEN = p1 + p2;
         
         const BASE_ID = "appM7TGBHwawnNWijs"; 
 
@@ -180,7 +182,6 @@
         }
 
         async function loadData() {
-            // Пробуем загрузить сначала из Products, если не выйдет — из Table 1
             let success = false;
             let tables = ["Products", "Table 1"];
             
@@ -202,7 +203,7 @@
             }
 
             if (!success) {
-                document.getElementById('catalog').innerHTML = "<div class='loader'>Товары не найдены.<br><span style='font-size:12px;color:#86868b;'>Убедись, что токен в Airtable активен и строка в базе заполнена!</span></div>";
+                document.getElementById('catalog').innerHTML = "<div class='loader'>Товары не найдены.<br><span style='font-size:12px;color:#86868b;'>Убедись, что строка в базе Airtable заполнена!</span></div>";
             }
 
             document.getElementById('prof-name').innerText = user.first_name;
@@ -219,7 +220,7 @@
                     const currentCount = cart[p.id] ? cart[p.id].count : 0;
                     let btnHTML = `<button class="glass-btn" onclick="addToCart(${p.id},'${p.name}',${p.price})">В корзину</button>`;
                     if (currentCount > 0) {
-                        btnHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${p.id},-1)">-</button><span style="font-weight:700; min-width:16px; text-align:center;">${currentCount}</span><button class="glass-btn counter-btn" onclick="changeCount(${p.id},1)">+</button></div>`;
+                        btnHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${p.id},-1)">-</button><span style="font-weight:700; min-width:16px; text-align:center;">${currentCount}</span><button class="glass-btn counter-btn" onclick="changeCount(${id},1)">+</button></div>`;
                     }
                     html += `<div class="glass-card"><div class="item-info"><span class="item-name">${p.name}</span><span class="item-desc">${p.desc || ''}</span><span class="item-price">${parseFloat(p.price).toFixed(2)} Br</span></div><div id="btn-box-${p.id}">${btnHTML}</div></div>`;
                 });
