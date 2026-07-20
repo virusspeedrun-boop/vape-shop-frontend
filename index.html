@@ -8,9 +8,10 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
         
-        /* Дорогой матовый цвет графита без цветных пятен */
+        /* Строгий однотонный графитовый фон без градиентов */
         body { 
-            background: #121214; 
+            background-color: #121214 !important; 
+            background-image: none !important;
             color: #ffffff; 
             padding: 16px;
             padding-bottom: 120px;
@@ -162,7 +163,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Безопасная сборка твоего НОВОГО токена кусками
+        // Безопасная сборка твоего токена
         const p1 = "patV9B4cH3XK0IuB6";
         const p2 = ".622e2ad8781a6360108dbc69dba0753d7dadf1ec1ad5a2694b2a2014049a0ec7";
         const AIRTABLE_TOKEN = p1 + p2;
@@ -220,7 +221,7 @@
                     const currentCount = cart[p.id] ? cart[p.id].count : 0;
                     let btnHTML = `<button class="glass-btn" onclick="addToCart(${p.id},'${p.name}',${p.price})">В корзину</button>`;
                     if (currentCount > 0) {
-                        btnHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${p.id},-1)">-</button><span style="font-weight:700; min-width:16px; text-align:center;">${currentCount}</span><button class="glass-btn counter-btn" onclick="changeCount(${id},1)">+</button></div>`;
+                        btnHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${p.id},-1)">-</button><span style="font-weight:700; min-width:16px; text-align:center;">${currentCount}</span><button class="glass-btn counter-btn" onclick="changeCount(${p.id},1)">+</button></div>`;
                     }
                     html += `<div class="glass-card"><div class="item-info"><span class="item-name">${p.name}</span><span class="item-desc">${p.desc || ''}</span><span class="item-price">${parseFloat(p.price).toFixed(2)} Br</span></div><div id="btn-box-${p.id}">${btnHTML}</div></div>`;
                 });
