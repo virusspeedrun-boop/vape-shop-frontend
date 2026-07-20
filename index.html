@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vape Shop Mini App</title>
+    <!-- Подключаем скрипт Телеграма (ОБЯЗАТЕЛЬНО) -->
+    <script src="https://telegram.org"></script>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
+        .card { background: #2a2a2a; padding: 15px; border-radius: 10px; margin: 15px 0; }
+        button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>🔥 Каталог товаров</h2>
+    
+    <div class="card">
+        <h3>Жидкость Husky (Мята)</h3>
+        <p>Цена: 450 руб.</p>
+        <!-- По клику вызываем функцию отправки данных -->
+        <button onclick="buyItem('Жидкость Husky (Мята)', 450)">Купить</button>
+    </div>
+
+    <script>
+        // Инициализируем Telegram WebApp API
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем приложение на весь экран
+
+        function buyItem(name, price) {
+            // Имитируем корзину с одним товаром
+            const order = {
+                items: [{ name: name, price: price }],
+                totalPrice: price
+            };
+
+            // Отправляем JSON обратно боту и закрываем окно
+            tg.sendData(JSON.stringify(order));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
