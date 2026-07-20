@@ -1,245 +1,196 @@
 <!DOCTYPE html>
-<html lang="be">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape Shop TMA</title>
+    <title>Vape Shop Elite</title>
     <!-- Подключаем Telegram WebApp API -->
     <script src="https://telegram.org"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #0a0a0a; color: #ffffff; padding: 16px; padding-bottom: 110px; }
         
-        body { 
-            background: #0a0a0a; 
-            color: #ffffff; 
-            padding: 16px;
-            padding-bottom: 100px;
-            background-image: radial-gradient(circle at top right, #1c1c1e 0%, #0a0a0a 100%);
-        }
-
-        h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
         .section-title { font-size: 14px; text-transform: uppercase; color: #8e8e93; letter-spacing: 1px; margin: 24px 0 12px 0; }
-
-        /* Эффект матового стекла iOS (Glassmorphism) */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s, background 0.2s;
-        }
-        .glass-card:active {
-            transform: scale(0.98);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
+        
+        /* Стеклянные карточки товаров */
+        .glass-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .item-info { display: flex; flex-direction: column; gap: 4px; }
-        .item-name { font-size: 16px; font-weight: 600; color: #fff; }
+        .item-name { font-size: 16px; font-weight: 600; }
         .item-desc { font-size: 12px; color: #8e8e93; }
-        .item-price { font-size: 15px; font-weight: 700; color: #fff; margin-top: 4px; }
-
-        /* Стеклянные кнопки в стиле iOS */
-        .glass-btn {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .glass-btn:active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Кнопки управления количеством в корзине */
+        .item-price { font-size: 15px; font-weight: 700; margin-top: 4px; }
+        
+        /* Прозрачные кнопки iOS */
+        .glass-btn { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
         .counter-box { display: flex; align-items: center; gap: 12px; }
-        .counter-btn { width: 28px; height: 28px; border-radius: 50px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .counter-btn { width: 28px; height: 28px; border-radius: 50px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Нижнее меню (Каталог / Профиль) */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .nav-item { color: #8e8e93; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; }
+        .nav-item.active { color: #ffffff; font-weight: 600; }
+        .nav-icon { font-size: 20px; }
 
-        /* Нижняя стеклянная плашка корзины */
-        .cart-dock {
-            position: fixed;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transform: translateY(150%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
+        /* Всплывающая плашка корзины */
+        .cart-dock { position: fixed; bottom: 80px; left: 16px; right: 16px; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; transform: translateY(200%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 90; }
         .cart-dock.active { transform: translateY(0); }
-        .cart-text { display: flex; flex-direction: column; }
-        .cart-total { font-size: 18px; font-weight: 700; }
-        .checkout-btn { background: #ffffff; color: #000000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+        .checkout-btn { background: #ffffff; color: #000000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; }
+
+        /* Экраны страниц */
+        .page { display: none; }
+        .page.active { display: block; }
+        .loader { text-align: center; color: #8e8e93; margin-top: 50px; }
+
+        /* Выезжающая шторка выбора района */
+        .ios-sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; z-index: 200; }
+        .ios-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #1c1c1e; border-top-left-radius: 16px; border-top-right-radius: 16px; padding: 24px 16px; transform: translateY(100%); transition: transform 0.3s ease-out; z-index: 201; }
+        .ios-sheet.active { transform: translateY(0); }
+        .sheet-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 20px; }
+        .district-option { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 10px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .district-option:active { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <h2>💨 Vape Shop</h2>
-
-    <!-- Категория: Жидкости -->
-    <div class="section-title">Жидкости</div>
-    <div class="glass-card">
-        <div class="item-info">
-            <span class="item-name">Husky Premium</span>
-            <span class="item-desc">Киви и мята, 20мг солевой</span>
-            <span class="item-price">16.50 Br</span>
-        </div>
-        <div id="btn-box-1"><button class="glass-btn" onclick="addToCart(1, 'Husky Premium', 16.50)">В корзину</button></div>
-    </div>
-    <div class="glass-card">
-        <div class="item-info">
-            <span class="item-name">Maxwell's Shoria</span>
-            <span class="item-desc">Хвоя, лесные ягоды и мята</span>
-            <span class="item-price">18.00 Br</span>
-        </div>
-        <div id="btn-box-2"><button class="glass-btn" onclick="addToCart(2, 'Maxwell\'s Shoria', 18.00)">В корзину</button></div>
+    <!-- ВКЛАДКА: КАТАЛОГ -->
+    <div id="page-catalog" class="page active">
+        <h2>💨 Каталог товаров</h2>
+        <div id="catalog"><div class="loader">Загрузка товаров...</div></div>
     </div>
 
-    <!-- Категория: Электронки -->
-    <div class="section-title">Одноразовые ЭС</div>
-    <div class="glass-card">
-        <div class="item-info">
-            <span class="item-name">Waka SoPro 10000</span>
-            <span class="item-desc">Черника-взрыв, двойной койл</span>
-            <span class="item-price">38.00 Br</span>
+    <!-- ВКЛАДКА: ПРОФИЛЬ -->
+    <div id="page-profile" class="page">
+        <h2>👤 Мой профиль</h2>
+        <div class="glass-card" style="flex-direction: column; align-items: flex-start; gap: 10px; width: 100%;">
+            <div>Имя: <span id="prof-name" style="font-weight: 600;">Покупатель</span></div>
+            <div>Юзернейм: <span id="prof-username" style="color: #8e8e93;">@username</span></div>
         </div>
-        <div id="btn-box-3"><button class="glass-btn" onclick="addToCart(3, 'Waka SoPro 10000', 38.00)">В корзину</button></div>
-    </div>
-    <div class="glass-card">
-        <div class="item-info">
-            <span class="item-name">Lost Mary MO 10000</span>
-            <span class="item-desc">Спелое яблоко, с экраном</span>
-            <span class="item-price">39.50 Br</span>
-        </div>
-        <div id="btn-box-4"><button class="glass-btn" onclick="addToCart(4, 'Lost Mary MO 10000', 39.50)">В корзину</button></div>
     </div>
 
-    <!-- Категория: Испарители -->
-    <div class="section-title">Испарители и расходники</div>
-    <div class="glass-card">
-        <div class="item-info">
-            <span class="item-name">Испаритель Vaporesso XROS</span>
-            <span class="item-desc">Сопротивление 0.6 Ом / сетка</span>
-            <span class="item-price">9.00 Br</span>
+    <!-- Нижние вкладки навигации -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchPage('catalog', this)">
+            <span class="nav-icon">💨</span><span>Каталог</span>
         </div>
-        <div id="btn-box-5"><button class="glass-btn" onclick="addToCart(5, 'Испаритель XROS 0.6', 9.00)">В корзину</button></div>
+        <div class="nav-item" onclick="switchPage('profile', this)">
+            <span class="nav-icon">👤</span><span>Профиль</span>
+        </div>
     </div>
 
-    <!-- Всплывающая Стеклянная Корзина -->
+    <!-- Всплывающая Корзина -->
     <div class="cart-dock" id="cartDock">
-        <div class="cart-text">
+        <div>
             <span id="cartCount" style="font-size: 12px; color: #8e8e93;">Товаров: 0</span>
-            <span class="cart-total" id="cartTotal">0.00 Br</span>
+            <div id="cartTotal" style="font-size:18px; font-weight:700;">0.00 Br</div>
         </div>
-        <button class="checkout-btn" onclick="submitOrder()">Заказать</button>
+        <button class="checkout-btn" onclick="openDistrictSheet()">Заказать</button>
     </div>
 
+    <!-- Шторка выбора района -->
+    <div class="ios-sheet-overlay" id="sheetOverlay" onclick="closeDistrictSheet()"></div>
+    <div class="ios-sheet" id="districtSheet">
+        <div class="sheet-title">Выбери свой микрорайон</div>
+        <div class="district-option" onclick="submitOrder('м-р Восточный')">📍 м-р Восточный</div>
+        <div class="district-option" onclick="submitOrder('м-р Центр')">📍 м-р Центр</div>
+        <div class="district-option" onclick="submitOrder('Досы')">📍 Досы</div>
+    </div>
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // 🔑 ТВОИ НАСТРОЙКИ КЛЮЧЕЙ СЮДА
+        const AIRTABLE_TOKEN = "ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН_PAT";
+        const BASE_ID = "appM7TGBHwawnNWijs"; // ID твоей базы со скриншота
+
         let cart = {};
+        let productsData = [];
+        
+        // Достаем данные юзера из Telegram API
+        const user = tg.initDataUnsafe?.user || { first_name: "Покупатель", username: "vape_user" };
 
-        function updateUI() {
-            let totalItems = 0;
-            let totalPrice = 0;
-
-            for (let id in cart) {
-                totalItems += cart[id].count;
-                totalPrice += cart[id].price * cart[id].count;
-            }
-
-            // Показываем/скрываем нижнюю панель корзины
-            const dock = document.getElementById('cartDock');
-            if (totalItems > 0) {
-                dock.classList.add('active');
-            } else {
-                dock.classList.remove('active');
-            }
-
-            document.getElementById('cartCount').innerText = `Товаров: ${totalItems}`;
-            document.getElementById('cartTotal').innerText = `${totalPrice.toFixed(2)} Br`;
+        // Переключение между Каталогом и Профилем
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            element.classList.add('active');
+            if(pageId === 'catalog') updateUI(); else document.getElementById('cartDock').classList.remove('active');
         }
 
-        function addToCart(id, name, price) {
-            if (!cart[id]) {
-                cart[id] = { name: name, price: price, count: 1 };
-            } else {
-                cart[id].count++;
+        // Загрузка товаров из Airtable
+        async function loadData() {
+            try {
+                const res = await fetch(`https://airtable.com{BASE_ID}/Products`, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
+                const data = await res.json(); 
+                productsData = data.records.map(r => r.fields); 
+                renderCatalog();
+            } catch(e) { 
+                document.getElementById('catalog').innerText = "Ошибка загрузки продуктов. Проверь токен."; 
             }
-            renderCounter(id);
+
+            // Выводим инфу о юзере во вкладку профиля
+            document.getElementById('prof-name').innerText = user.first_name;
+            document.getElementById('prof-username').innerText = user.username ? `@${user.username}` : 'нет';
+        }
+
+        // Генерация карточек по категориям
+        function renderCatalog() {
+            const catalogDiv = document.getElementById('catalog'); catalogDiv.innerHTML = "";
+            const categories = [...new Set(productsData.map(p => p.category))];
+            categories.forEach(cat => {
+                let html = `<div class="section-title">${cat}</div>`;
+                productsData.filter(p => p.category === cat).forEach(p => {
+                    html += `<div class="glass-card"><div class="item-info"><span class="item-name">${p.name}</span><span class="item-desc">${p.desc || ''}</span><span class="item-price">${parseFloat(p.price).toFixed(2)} Br</span></div><div id="btn-box-${p.id}"><button class="glass-btn" onclick="addToCart(${p.id},'${p.name}',${p.price})">В корзину</button></div></div>`;
+                });
+                catalogDiv.innerHTML += html;
+            });
+        }
+
+        // Добавление в корзину и счетчик
+        function addToCart(id, name, price) {
+            if (!cart[id]) cart[id] = { name: name, price: price, count: 1 }; else cart[id].count++;
+            document.getElementById(`btn-box-${id}`).innerHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${id},-1)">-</button><span style="font-weight:600; min-width:15px; text-align:center;">${cart[id].count}</span><button class="glass-btn counter-btn" onclick="changeCount(${id},1)">+</button></div>`;
             updateUI();
         }
 
         function changeCount(id, delta) {
-            if (!cart[id]) return;
             cart[id].count += delta;
-            if (cart[id].count <= 0) {
-                delete cart[id];
-                document.getElementById(`btn-box-${id}`).innerHTML = `<button class="glass-btn" onclick="addToCart(${id}, '${escapeHtml(id)}', 0)">В корзину</button>`;
-                // Для простоты перерисовки при удалении восстановим дефолтную кнопку по клику
-                location.reload(); 
-                return;
-            }
-            document.getElementById(`count-${id}`).innerText = cart[id].count;
-            updateUI();
+            if(cart[id].count <= 0) { delete cart[id]; loadData(); return; }
+            addToCart(id, cart[id].name, cart[id].price); cart[id].count--; updateUI();
         }
 
-        function renderCounter(id) {
-            const box = document.getElementById(`btn-box-${id}`);
-            box.innerHTML = `
-                <div class="counter-box">
-                    <button class="glass-btn counter-btn" onclick="changeCount(${id}, -1)">-</button>
-                    <span id="count-${id}" style="font-weight:600; min-width:14px; text-align:center;">${cart[id].count}</span>
-                    <button class="glass-btn counter-btn" onclick="changeCount(${id}, 1)">+</button>
-                </div>
-            `;
+        // Обновление цен в корзине
+        function updateUI() {
+            let tc = 0; let tp = 0; for (let id in cart) { tc += cart[id].count; tp += cart[id].price * cart[id].count; }
+            const dock = document.getElementById('cartDock');
+            if (tc > 0 && document.getElementById('page-catalog').classList.contains('active')) dock.classList.add('active'); else dock.classList.remove('active');
+            document.getElementById('cartCount').innerText = `Товаров: ${tc}`; document.getElementById('cartTotal').innerText = `${tp.toFixed(2)} Br`;
         }
 
-        function submitOrder() {
-            let orderItems = [];
-            let totalPrice = 0;
+        // Управление шторкой районов
+        function openDistrictSheet() {
+            document.getElementById('sheetOverlay').style.display = 'block';
+            setTimeout(() => document.getElementById('districtSheet').classList.add('active'), 50);
+        }
+        function closeDistrictSheet() {
+            document.getElementById('districtSheet').classList.remove('active');
+            setTimeout(() => document.getElementById('sheetOverlay').style.display = 'none', 300);
+        }
 
+        // Отправка заказа боту
+        function submitOrder(districtName) {
+            let orderItems = []; let totalPrice = 0;
             for (let id in cart) {
-                orderItems.push({
-                    name: cart[id].name,
-                    price: cart[id].price,
-                    count: cart[id].count
-                });
+                orderItems.push({ name: cart[id].name, count: cart[id].count, price: cart[id].price });
                 totalPrice += cart[id].price * cart[id].count;
             }
-
-            const orderData = {
-                items: orderItems,
-                totalPrice: totalPrice.toFixed(2)
-            };
-
-            // Отправляем массив товаров боту
-            tg.sendData(JSON.stringify(orderData));
+            
+            const result = { items: orderItems, totalPrice: totalPrice.toFixed(2), district: districtName };
+            tg.sendData(JSON.stringify(result));
             tg.close();
         }
 
-        function escapeHtml(text) { return text; } // упрощено для статики
+        loadData();
     </script>
 </body>
 </html>
