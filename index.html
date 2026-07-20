@@ -1,44 +1,245 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="be">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape Shop Mini App</title>
-    <!-- Подключаем скрипт Телеграма (ОБЯЗАТЕЛЬНО) -->
+    <title>Vape Shop TMA</title>
+    <!-- Подключаем Telegram WebApp API -->
     <script src="https://telegram.org"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
-        .card { background: #2a2a2a; padding: 15px; border-radius: 10px; margin: 15px 0; }
-        button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { 
+            background: #0a0a0a; 
+            color: #ffffff; 
+            padding: 16px;
+            padding-bottom: 100px;
+            background-image: radial-gradient(circle at top right, #1c1c1e 0%, #0a0a0a 100%);
+        }
+
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .section-title { font-size: 14px; text-transform: uppercase; color: #8e8e93; letter-spacing: 1px; margin: 24px 0 12px 0; }
+
+        /* Эффект матового стекла iOS (Glassmorphism) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .glass-card:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .item-info { display: flex; flex-direction: column; gap: 4px; }
+        .item-name { font-size: 16px; font-weight: 600; color: #fff; }
+        .item-desc { font-size: 12px; color: #8e8e93; }
+        .item-price { font-size: 15px; font-weight: 700; color: #fff; margin-top: 4px; }
+
+        /* Стеклянные кнопки в стиле iOS */
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .glass-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Кнопки управления количеством в корзине */
+        .counter-box { display: flex; align-items: center; gap: 12px; }
+        .counter-btn { width: 28px; height: 28px; border-radius: 50px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+        /* Нижняя стеклянная плашка корзины */
+        .cart-dock {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .cart-dock.active { transform: translateY(0); }
+        .cart-text { display: flex; flex-direction: column; }
+        .cart-total { font-size: 18px; font-weight: 700; }
+        .checkout-btn { background: #ffffff; color: #000000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <h2>🔥 Каталог товаров</h2>
-    
-    <div class="card">
-        <h3>Жидкость Husky (Мята)</h3>
-        <p>Цена: 450 руб.</p>
-        <!-- По клику вызываем функцию отправки данных -->
-        <button onclick="buyItem('Жидкость Husky (Мята)', 450)">Купить</button>
+    <h2>💨 Vape Shop</h2>
+
+    <!-- Категория: Жидкости -->
+    <div class="section-title">Жидкости</div>
+    <div class="glass-card">
+        <div class="item-info">
+            <span class="item-name">Husky Premium</span>
+            <span class="item-desc">Киви и мята, 20мг солевой</span>
+            <span class="item-price">16.50 Br</span>
+        </div>
+        <div id="btn-box-1"><button class="glass-btn" onclick="addToCart(1, 'Husky Premium', 16.50)">В корзину</button></div>
+    </div>
+    <div class="glass-card">
+        <div class="item-info">
+            <span class="item-name">Maxwell's Shoria</span>
+            <span class="item-desc">Хвоя, лесные ягоды и мята</span>
+            <span class="item-price">18.00 Br</span>
+        </div>
+        <div id="btn-box-2"><button class="glass-btn" onclick="addToCart(2, 'Maxwell\'s Shoria', 18.00)">В корзину</button></div>
+    </div>
+
+    <!-- Категория: Электронки -->
+    <div class="section-title">Одноразовые ЭС</div>
+    <div class="glass-card">
+        <div class="item-info">
+            <span class="item-name">Waka SoPro 10000</span>
+            <span class="item-desc">Черника-взрыв, двойной койл</span>
+            <span class="item-price">38.00 Br</span>
+        </div>
+        <div id="btn-box-3"><button class="glass-btn" onclick="addToCart(3, 'Waka SoPro 10000', 38.00)">В корзину</button></div>
+    </div>
+    <div class="glass-card">
+        <div class="item-info">
+            <span class="item-name">Lost Mary MO 10000</span>
+            <span class="item-desc">Спелое яблоко, с экраном</span>
+            <span class="item-price">39.50 Br</span>
+        </div>
+        <div id="btn-box-4"><button class="glass-btn" onclick="addToCart(4, 'Lost Mary MO 10000', 39.50)">В корзину</button></div>
+    </div>
+
+    <!-- Категория: Испарители -->
+    <div class="section-title">Испарители и расходники</div>
+    <div class="glass-card">
+        <div class="item-info">
+            <span class="item-name">Испаритель Vaporesso XROS</span>
+            <span class="item-desc">Сопротивление 0.6 Ом / сетка</span>
+            <span class="item-price">9.00 Br</span>
+        </div>
+        <div id="btn-box-5"><button class="glass-btn" onclick="addToCart(5, 'Испаритель XROS 0.6', 9.00)">В корзину</button></div>
+    </div>
+
+    <!-- Всплывающая Стеклянная Корзина -->
+    <div class="cart-dock" id="cartDock">
+        <div class="cart-text">
+            <span id="cartCount" style="font-size: 12px; color: #8e8e93;">Товаров: 0</span>
+            <span class="cart-total" id="cartTotal">0.00 Br</span>
+        </div>
+        <button class="checkout-btn" onclick="submitOrder()">Заказать</button>
     </div>
 
     <script>
-        // Инициализируем Telegram WebApp API
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем приложение на весь экран
+        tg.expand();
 
-        function buyItem(name, price) {
-            // Имитируем корзину с одним товаром
-            const order = {
-                items: [{ name: name, price: price }],
-                totalPrice: price
+        let cart = {};
+
+        function updateUI() {
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            for (let id in cart) {
+                totalItems += cart[id].count;
+                totalPrice += cart[id].price * cart[id].count;
+            }
+
+            // Показываем/скрываем нижнюю панель корзины
+            const dock = document.getElementById('cartDock');
+            if (totalItems > 0) {
+                dock.classList.add('active');
+            } else {
+                dock.classList.remove('active');
+            }
+
+            document.getElementById('cartCount').innerText = `Товаров: ${totalItems}`;
+            document.getElementById('cartTotal').innerText = `${totalPrice.toFixed(2)} Br`;
+        }
+
+        function addToCart(id, name, price) {
+            if (!cart[id]) {
+                cart[id] = { name: name, price: price, count: 1 };
+            } else {
+                cart[id].count++;
+            }
+            renderCounter(id);
+            updateUI();
+        }
+
+        function changeCount(id, delta) {
+            if (!cart[id]) return;
+            cart[id].count += delta;
+            if (cart[id].count <= 0) {
+                delete cart[id];
+                document.getElementById(`btn-box-${id}`).innerHTML = `<button class="glass-btn" onclick="addToCart(${id}, '${escapeHtml(id)}', 0)">В корзину</button>`;
+                // Для простоты перерисовки при удалении восстановим дефолтную кнопку по клику
+                location.reload(); 
+                return;
+            }
+            document.getElementById(`count-${id}`).innerText = cart[id].count;
+            updateUI();
+        }
+
+        function renderCounter(id) {
+            const box = document.getElementById(`btn-box-${id}`);
+            box.innerHTML = `
+                <div class="counter-box">
+                    <button class="glass-btn counter-btn" onclick="changeCount(${id}, -1)">-</button>
+                    <span id="count-${id}" style="font-weight:600; min-width:14px; text-align:center;">${cart[id].count}</span>
+                    <button class="glass-btn counter-btn" onclick="changeCount(${id}, 1)">+</button>
+                </div>
+            `;
+        }
+
+        function submitOrder() {
+            let orderItems = [];
+            let totalPrice = 0;
+
+            for (let id in cart) {
+                orderItems.push({
+                    name: cart[id].name,
+                    price: cart[id].price,
+                    count: cart[id].count
+                });
+                totalPrice += cart[id].price * cart[id].count;
+            }
+
+            const orderData = {
+                items: orderItems,
+                totalPrice: totalPrice.toFixed(2)
             };
 
-            // Отправляем JSON обратно боту и закрываем окно
-            tg.sendData(JSON.stringify(order));
+            // Отправляем массив товаров боту
+            tg.sendData(JSON.stringify(orderData));
             tg.close();
         }
+
+        function escapeHtml(text) { return text; } // упрощено для статики
     </script>
 </body>
 </html>
