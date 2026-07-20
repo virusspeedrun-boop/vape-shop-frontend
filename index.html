@@ -3,93 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape Shop Elite</title>
-    <!-- Подключаем Telegram WebApp API -->
+    <title>Vape Shop Liquid Glass</title>
     <script src="https://telegram.org"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: #0a0a0a; color: #ffffff; padding: 16px; padding-bottom: 110px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
         
-        h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-        .section-title { font-size: 14px; text-transform: uppercase; color: #8e8e93; letter-spacing: 1px; margin: 24px 0 12px 0; }
+        body { 
+            background: #000000; 
+            color: #ffffff; 
+            padding: 16px;
+            padding-bottom: 120px;
+            background-image: radial-gradient(circle at 50% -20%, #1c1c24 0%, #000000 80%);
+        }
+
+        h2 { font-size: 26px; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px; background: linear-gradient(180deg, #fff 0%, #a1a1a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-title { font-size: 13px; text-transform: uppercase; color: #8e8e93; letter-spacing: 1.5px; margin: 28px 0 14px 4px; font-weight: 700; }
         
-        /* Стеклянные карточки товаров */
-        .glass-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        /* Глянцевые карточки «Жидкое стекло» */
+        .glass-card { 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px; padding: 18px; margin-bottom: 14px; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
         .item-info { display: flex; flex-direction: column; gap: 4px; }
-        .item-name { font-size: 16px; font-weight: 600; }
-        .item-desc { font-size: 12px; color: #8e8e93; }
-        .item-price { font-size: 15px; font-weight: 700; margin-top: 4px; }
+        .item-name { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+        .item-desc { font-size: 12px; color: #86868b; line-height: 1.4; }
+        .item-price { font-size: 16px; font-weight: 800; color: #ffffff; margin-top: 6px; }
         
-        /* Прозрачные кнопки iOS */
-        .glass-btn { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .counter-box { display: flex; align-items: center; gap: 12px; }
-        .counter-btn { width: 28px; height: 28px; border-radius: 50px; display: flex; align-items: center; justify-content: center; }
+        /* Кнопки виджетов iOS */
+        .glass-btn { 
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.18); border-top: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-btn:active { 
+            transform: scale(0.95);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        .counter-box { display: flex; align-items: center; gap: 14px; }
+        .counter-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; padding: 0; }
         
-        /* Нижнее меню (Каталог / Профиль) */
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .nav-item { color: #8e8e93; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; }
-        .nav-item.active { color: #ffffff; font-weight: 600; }
-        .nav-icon { font-size: 20px; }
+        /* Панель вкладок (3 кнопки) */
+        .nav-bar { 
+            position: fixed; bottom: 16px; left: 16px; right: 16px; height: 68px; 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px; display: flex; justify-content: space-around; align-items: center; z-index: 100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        .nav-item { color: #86868b; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font-weight: 600; position: relative; }
+        .nav-item.active { color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .nav-icon { font-size: 22px; transition: transform 0.2s; }
+        .nav-item.active .nav-icon { transform: scale(1.15); }
 
-        /* Всплывающая плашка корзины */
-        .cart-dock { position: fixed; bottom: 80px; left: 16px; right: 16px; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; transform: translateY(200%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 90; }
-        .cart-dock.active { transform: translateY(0); }
-        .checkout-btn { background: #ffffff; color: #000000; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; }
+        /* Красный индикатор количества товаров */
+        .badge { position: absolute; top: -4px; right: 2px; background: #ff3b30; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; display: none; }
 
-        /* Экраны страниц */
-        .page { display: none; }
+        /* Стеклянная кнопка "Оформить" внутри корзины */
+        .action-btn { 
+            background: #ffffff; color: #000000; border: none; width: 100%; padding: 16px; 
+            border-radius: 18px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2); transition: all 0.2s; text-align: center;
+        }
+        .action-btn:active { transform: scale(0.97); background: #e5e5ea; }
+
+        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
         .page.active { display: block; }
-        .loader { text-align: center; color: #8e8e93; margin-top: 50px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .loader, .empty-cart { text-align: center; color: #86868b; margin-top: 60px; font-size: 15px; }
 
-        /* Выезжающая шторка выбора района */
-        .ios-sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; z-index: 200; }
-        .ios-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #1c1c1e; border-top-left-radius: 16px; border-top-right-radius: 16px; padding: 24px 16px; transform: translateY(100%); transition: transform 0.3s ease-out; z-index: 201; }
+        /* Шторка выбора района */
+        .ios-sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; z-index: 200; }
+        .ios-sheet { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(180deg, #1c1c1e 0%, #0d0d0e 100%);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.15); border-top-left-radius: 24px; border-top-right-radius: 24px; 
+            padding: 28px 20px; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); z-index: 201; 
+        }
         .ios-sheet.active { transform: translateY(0); }
-        .sheet-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 20px; }
-        .district-option { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 10px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .district-option:active { background: rgba(255,255,255,0.1); }
+        .sheet-title { font-size: 19px; font-weight: 800; text-align: center; margin-bottom: 24px; }
+        .district-option { 
+            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%); 
+            border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 16px; 
+            text-align: center; margin-bottom: 12px; font-weight: 700; font-size: 15px; cursor: pointer; 
+        }
     </style>
 </head>
 <body>
 
-    <!-- ВКЛАДКА: КАТАЛОГ -->
+    <!-- ВКЛАДКА 1: КАТАЛОГ -->
     <div id="page-catalog" class="page active">
         <h2>💨 Каталог товаров</h2>
-        <div id="catalog"><div class="loader">Загрузка товаров...</div></div>
+        <div id="catalog"><div class="loader">Синхронизация с базой данных...</div></div>
     </div>
 
-    <!-- ВКЛАДКА: ПРОФИЛЬ -->
-    <div id="page-profile" class="page">
-        <h2>👤 Мой профиль</h2>
-        <div class="glass-card" style="flex-direction: column; align-items: flex-start; gap: 10px; width: 100%;">
-            <div>Имя: <span id="prof-name" style="font-weight: 600;">Покупатель</span></div>
-            <div>Юзернейм: <span id="prof-username" style="color: #8e8e93;">@username</span></div>
+    <!-- ВКЛАДКА 2: КОРЗИНА -->
+    <div id="page-cart" class="page">
+        <h2>🛒 Моя корзина</h2>
+        <div id="cart-items"></div>
+        <div id="cart-summary" style="display: none; margin-top: 20px;">
+            <div class="glass-card" style="margin-bottom: 0;">
+                <span style="font-size: 16px; color: #86868b; font-weight: 600;">Итого к оплате:</span>
+                <span id="cartTotal" style="font-size: 22px; font-weight: 800;">0.00 Br</span>
+            </div>
+            <button class="action-btn" onclick="openDistrictSheet()">Оформить заказ</button>
         </div>
     </div>
 
-    <!-- Нижние вкладки навигации -->
+    <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
+    <div id="page-profile" class="page">
+        <h2>👤 Мой профиль</h2>
+        <div class="glass-card" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
+            <div style="font-size: 15px; color: #86868b;">Покупатель: <span id="prof-name" style="font-weight: 700; color: #fff;">Загрузка...</span></div>
+            <div style="font-size: 15px; color: #86868b;">Никнейм: <span id="prof-username" style="color: #fff; font-weight: 600;">@username</span></div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); width: 100%; padding-top: 12px; margin-top: 4px; font-size: 14px; color: #86868b;">
+                👑 Статус клиента: <span style="font-weight: 800; color: #fff;">Постоянный покупатель</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Объемная Панель Вкладок iOS -->
     <div class="nav-bar">
         <div class="nav-item active" onclick="switchPage('catalog', this)">
             <span class="nav-icon">💨</span><span>Каталог</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('cart', this)">
+            <span class="badge" id="cart-badge">0</span>
+            <span class="nav-icon">🛒</span><span>Корзина</span>
         </div>
         <div class="nav-item" onclick="switchPage('profile', this)">
             <span class="nav-icon">👤</span><span>Профиль</span>
         </div>
     </div>
 
-    <!-- Всплывающая Корзина -->
-    <div class="cart-dock" id="cartDock">
-        <div>
-            <span id="cartCount" style="font-size: 12px; color: #8e8e93;">Товаров: 0</span>
-            <div id="cartTotal" style="font-size:18px; font-weight:700;">0.00 Br</div>
-        </div>
-        <button class="checkout-btn" onclick="openDistrictSheet()">Заказать</button>
-    </div>
-
-    <!-- Шторка выбора района -->
+    <!-- Шторка Выбора Локальных Продавцов -->
     <div class="ios-sheet-overlay" id="sheetOverlay" onclick="closeDistrictSheet()"></div>
     <div class="ios-sheet" id="districtSheet">
-        <div class="sheet-title">Выбери свой микрорайон</div>
+        <div class="sheet-title">Укажите ваш микрорайон</div>
         <div class="district-option" onclick="submitOrder('м-р Восточный')">📍 м-р Восточный</div>
         <div class="district-option" onclick="submitOrder('м-р Центр')">📍 м-р Центр</div>
         <div class="district-option" onclick="submitOrder('Досы')">📍 Досы</div>
@@ -99,25 +162,24 @@
         tg.expand();
 
         // 🔑 ТВОИ НАСТРОЙКИ КЛЮЧЕЙ СЮДА
-        const AIRTABLE_TOKEN = "ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН_PAT";
-        const BASE_ID = "appM7TGBHwawnNWijs"; // ID твоей базы со скриншота
+        const AIRTABLE_TOKEN = "patoxgPFq1zh8gxXi.7d253f774a7be700dfa3047e8302a7beb1add8b310dfed7b0848d4e12083a76d";
+        const BASE_ID = "appM7TGBHwawnNWijs"; 
 
         let cart = {};
         let productsData = [];
-        
-        // Достаем данные юзера из Telegram API
         const user = tg.initDataUnsafe?.user || { first_name: "Покупатель", username: "vape_user" };
 
-        // Переключение между Каталогом и Профилем
         function switchPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(`page-${pageId}`).classList.add('active');
             element.classList.add('active');
-            if(pageId === 'catalog') updateUI(); else document.getElementById('cartDock').classList.remove('active');
+            
+            if (pageId === 'cart') {
+                renderCartPage();
+            }
         }
 
-        // Загрузка товаров из Airtable
         async function loadData() {
             try {
                 const res = await fetch(`https://airtable.com{BASE_ID}/Products`, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
@@ -125,49 +187,95 @@
                 productsData = data.records.map(r => r.fields); 
                 renderCatalog();
             } catch(e) { 
-                document.getElementById('catalog').innerText = "Ошибка загрузки продуктов. Проверь токен."; 
+                document.getElementById('catalog').innerText = "Ошибка синхронизации. Проверь токен."; 
             }
-
-            // Выводим инфу о юзере во вкладку профиля
             document.getElementById('prof-name').innerText = user.first_name;
             document.getElementById('prof-username').innerText = user.username ? `@${user.username}` : 'нет';
         }
 
-        // Генерация карточек по категориям
         function renderCatalog() {
             const catalogDiv = document.getElementById('catalog'); catalogDiv.innerHTML = "";
             const categories = [...new Set(productsData.map(p => p.category))];
             categories.forEach(cat => {
                 let html = `<div class="section-title">${cat}</div>`;
                 productsData.filter(p => p.category === cat).forEach(p => {
-                    html += `<div class="glass-card"><div class="item-info"><span class="item-name">${p.name}</span><span class="item-desc">${p.desc || ''}</span><span class="item-price">${parseFloat(p.price).toFixed(2)} Br</span></div><div id="btn-box-${p.id}"><button class="glass-btn" onclick="addToCart(${p.id},'${p.name}',${p.price})">В корзину</button></div></div>`;
+                    const currentCount = cart[p.id] ? cart[p.id].count : 0;
+                    let btnHTML = `<button class="glass-btn" onclick="addToCart(${p.id},'${p.name}',${p.price})">В корзину</button>`;
+                    if (currentCount > 0) {
+                        btnHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${p.id},-1)">-</button><span style="font-weight:700; min-width:16px; text-align:center;">${currentCount}</span><button class="glass-btn counter-btn" onclick="changeCount(${p.id},1)">+</button></div>`;
+                    }
+                    html += `<div class="glass-card"><div class="item-info"><span class="item-name">${p.name}</span><span class="item-desc">${p.desc || ''}</span><span class="item-price">${parseFloat(p.price).toFixed(2)} Br</span></div><div id="btn-box-${p.id}">${btnHTML}</div></div>`;
                 });
                 catalogDiv.innerHTML += html;
             });
         }
 
-        // Добавление в корзину и счетчик
         function addToCart(id, name, price) {
             if (!cart[id]) cart[id] = { name: name, price: price, count: 1 }; else cart[id].count++;
-            document.getElementById(`btn-box-${id}`).innerHTML = `<div class="counter-box"><button class="glass-btn counter-btn" onclick="changeCount(${id},-1)">-</button><span style="font-weight:600; min-width:15px; text-align:center;">${cart[id].count}</span><button class="glass-btn counter-btn" onclick="changeCount(${id},1)">+</button></div>`;
-            updateUI();
+            updateCartBadge();
+            renderCatalog();
         }
 
         function changeCount(id, delta) {
+            if (!cart[id]) return;
             cart[id].count += delta;
-            if(cart[id].count <= 0) { delete cart[id]; loadData(); return; }
-            addToCart(id, cart[id].name, cart[id].price); cart[id].count--; updateUI();
+            if (cart[id].count <= 0) delete cart[id];
+            updateCartBadge();
+            renderCatalog();
+            if (document.getElementById('page-cart').classList.contains('active')) {
+                renderCartPage();
+            }
         }
 
-        // Обновление цен в корзине
-        function updateUI() {
-            let tc = 0; let tp = 0; for (let id in cart) { tc += cart[id].count; tp += cart[id].price * cart[id].count; }
-            const dock = document.getElementById('cartDock');
-            if (tc > 0 && document.getElementById('page-catalog').classList.contains('active')) dock.classList.add('active'); else dock.classList.remove('active');
-            document.getElementById('cartCount').innerText = `Товаров: ${tc}`; document.getElementById('cartTotal').innerText = `${tp.toFixed(2)} Br`;
+        function updateCartBadge() {
+            let totalCount = 0;
+            for (let id in cart) { totalCount += cart[id].count; }
+            const badge = document.getElementById('cart-badge');
+            if (totalCount > 0) {
+                badge.innerText = totalCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
         }
 
-        // Управление шторкой районов
+        function renderCartPage() {
+            const container = document.getElementById('cart-items');
+            const summary = document.getElementById('cart-summary');
+            container.innerHTML = "";
+            
+            let totalPrice = 0;
+            let hasItems = false;
+
+            for (let id in cart) {
+                hasItems = true;
+                const p = cart[id];
+                totalPrice += p.price * p.count;
+                
+                container.innerHTML += `
+                    <div class="glass-card">
+                        <div class="item-info">
+                            <span class="item-name">${p.name}</span>
+                            <span class="item-price">${(p.price * p.count).toFixed(2)} Br</span>
+                        </div>
+                        <div class="counter-box">
+                            <button class="glass-btn counter-btn" onclick="changeCount(${id},-1)">-</button>
+                            <span style="font-weight:700; min-width:16px; text-align:center;">${p.count}</span>
+                            <button class="glass-btn counter-btn" onclick="changeCount(${id},1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (hasItems) {
+                summary.style.display = 'block';
+                document.getElementById('cartTotal').innerText = `${totalPrice.toFixed(2)} Br`;
+            } else {
+                summary.style.display = 'none';
+                container.innerHTML = `<div class="empty-cart">В корзине пока пусто 💨<br><span style="font-size:13px; color:#86868b;">Добавьте товары в каталоге</span></div>`;
+            }
+        }
+
         function openDistrictSheet() {
             document.getElementById('sheetOverlay').style.display = 'block';
             setTimeout(() => document.getElementById('districtSheet').classList.add('active'), 50);
@@ -177,14 +285,12 @@
             setTimeout(() => document.getElementById('sheetOverlay').style.display = 'none', 300);
         }
 
-        // Отправка заказа боту
         function submitOrder(districtName) {
             let orderItems = []; let totalPrice = 0;
             for (let id in cart) {
                 orderItems.push({ name: cart[id].name, count: cart[id].count, price: cart[id].price });
                 totalPrice += cart[id].price * cart[id].count;
             }
-            
             const result = { items: orderItems, totalPrice: totalPrice.toFixed(2), district: districtName };
             tg.sendData(JSON.stringify(result));
             tg.close();
