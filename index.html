@@ -110,7 +110,7 @@
         </div>
     </div>
 
-    <!-- Объемная Панель Вкладок iOS -->
+    <!-- Панель Вкладок iOS -->
     <div class="nav-bar">
         <div class="nav-item active" onclick="switchPage('catalog', this)">
             <span class="nav-icon">💨</span><span>Каталог</span>
@@ -154,7 +154,7 @@
 
         async function loadData() {
             try {
-                // Стучимся на твой живой запущенный сервер Render
+                // Точный запрос к твоему живому серверу Render
                 const res = await fetch(`https://onrender.com`);
                 const data = await res.json(); 
                 if (data.records) {
